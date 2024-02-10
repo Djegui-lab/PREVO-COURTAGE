@@ -116,7 +116,7 @@ def afficher_historique(enregistrements):
 
 # Fonction principale
 def main():
-    st.title("Application de Bienvenue par E-mail")
+    st.title("Application web d'automatisation ")
     
     # Utiliser le concept de "state" pour gérer les différentes pages
     page = st.sidebar.selectbox("Navigation", ["Accueil", "Envoyer E-mail", "Historique"])
