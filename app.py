@@ -1,6 +1,5 @@
 
 from dotenv import load_dotenv
-load_dotenv() 
 import os 
 import streamlit as st
 import smtplib
@@ -9,7 +8,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
-
+load_dotenv() 
 
 # Ajouter du CSS personnalisé pour définir les couleurs de fond
 st.markdown(
