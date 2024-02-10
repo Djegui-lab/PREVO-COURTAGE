@@ -10,6 +10,24 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
 
+
+# Ajouter du CSS personnalisé pour définir les couleurs de fond
+st.markdown(
+    """
+    <style>
+        div.stApp {
+            background-color: #FF69B4;  /* Couleur de fond globale */
+        }
+        
+        .stTextInput {
+            background-color: #808080;  /* Couleur de fond du champ de saisie (rose) */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # Fonction pour envoyer un e-mail avec la nouvelle signature HTML dans le corps
 def envoyer_email(nom, prenom, email, piece_jointe=None):
     smtp_server = os.environ.get("SMTP_SERVER")
