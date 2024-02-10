@@ -1,3 +1,7 @@
+
+from dotenv import load_dotenv
+load_dotenv() 
+
 import streamlit as st
 import smtplib
 import ssl
@@ -8,10 +12,10 @@ from datetime import datetime
 
 # Fonction pour envoyer un e-mail avec la nouvelle signature HTML dans le corps
 def envoyer_email(nom, prenom, email, piece_jointe=None):
-    smtp_server = "smtp.gmail.com"
-    port = 465  # Port sécurisé SSL pour Gmail
-    adresse_expediteur = "dwague44@gmail.com"  # Remplacez par votre adresse e-mail Gmail
-    mot_de_passe = "ahdxhsqsmsacafjv"  # Remplacez par votre mot de passe Gmail
+    smtp_server = os.environ.get("SMTP_SERVER")
+    port = int(os.environ.get("SMTP_PORT"))  # Port sécurisé SSL pour Gmail
+    adresse_expediteur = os.environ.get("ADRESSE_EXPEDITEUR")  # Remplacez par votre adresse e-mail Gmail
+    mot_de_passe = os.environ.get("MOT_DE_PASSE")  # Remplacez par votre mot de passe Gmail
 
     sujet = f"Votre demande de devis pour l'assurance auto ! {nom}"
     corps = f"""<span style="color: black;">
