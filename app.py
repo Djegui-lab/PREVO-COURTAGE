@@ -1,3 +1,4 @@
+
 from dotenv import load_dotenv
 import streamlit as st
 load_dotenv() 
@@ -8,7 +9,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
-load_dotenv() 
 
 # Ajouter du CSS personnalisé pour définir les couleurs de fond
 st.markdown(
@@ -27,14 +27,17 @@ st.markdown(
 )
 
 
-def envoyer_email(nom, prenom, email, piece_jointe=None):
-    smtp_server = os.environ.get("SMTP_SERVER")
-    port = int(os.environ.get("SMTP_PORT", 8501))  # 465 est le port sécurisé SSL par défaut
-    adresse_expediteur = os.environ.get("ADRESSE_EXPEDITEUR")  # Remplacez par votre adresse e-mail Gmail
-    mot_de_passe = os.environ.get("MOT_DE_PASSE")  # Remplacez par votre mot de passe Gmail
 
-    sujet = f"Votre demandes de devis pour l'assurance auto ! {nom}"
+# Fonction pour envoyer un e-mail avec la nouvelle signature HTML dans le corps
+def envoyer_email(nom, prenom, email, piece_jointe=None):
+    smtp_server = "smtp.gmail.com"
+    port = 465  # Port sécurisé SSL pour Gmail
+    adresse_expediteur = "dwague44@gmail.com"  # Remplacez par votre adresse e-mail Gmail
+    mot_de_passe = "ahdxhsqsmsacafjv"  # Remplacez par votre mot de passe Gmail
+
+    sujet = f"Votre demande de devis pour l'assurance auto ! {nom}"
     corps = f"""<span style="color: black;">
+
 Nous attirons votre attention sur la validité de ce devis.<br>
 <br>
 Il est important de noter que ce tarif ne prend pas en considération d'éventuelles remises qui pourraient être appliquées.<br>
@@ -84,7 +87,7 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
             </tr>
         </tbody>
     </table>
-    </span>"""
+</div>"""
 
     # Créer un objet MIMEMultipart
     message = MIMEMultipart()
@@ -112,14 +115,6 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
             server.login(adresse_expediteur, mot_de_passe)
             server.sendmail(adresse_expediteur, email, message)
         statut_envoi = "Envoyé avec succès"
-    except smtplib.SMTPConnectError:
-        # Ajouter une connexion explicite si la connexion n'est pas déjà établie
-        with smtplib.SMTP_SSL(smtp_server, port, context=contexte_ssl) as server:
-            server.connect(smtp_server, port)
-            server.login(adresse_expediteur, mot_de_passe)
-            server.sendmail(adresse_expediteur, email, message)
-        statut_envoi = "Envoyé avec succès après connexion"
-
     except Exception as e:
         statut_envoi = f"Erreur d'envoi : {str(e)}"
 
@@ -134,6 +129,12 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
     }
 
 
+
+
+
+
+
+
 # Fonction pour afficher l'historique
 def afficher_historique(enregistrements):
     st.title("Historique des Enregistrements")
@@ -144,7 +145,9 @@ def afficher_historique(enregistrements):
 
 # Fonction principale
 def main():
-    st.title("Application web d'automatisation ")
+    st.title("Application web pour l'envoi automatique des Devis d'Assurance 🚗 ")
+    st.subheader(
+                "NB: Après avoir saisi les informations du client, y compris le devis, ce client recevra directement le devis par e-mail.")
     
     # Utiliser le concept de "state" pour gérer les différentes pages
     page = st.sidebar.selectbox("Navigation", ["Accueil", "Envoyer E-mail", "Historique"])
@@ -154,7 +157,8 @@ def main():
         st.session_state.enregistrements = []
 
     if page == "Accueil":
-        st.write("Bienvenue sur la page d'accueil.")
+        st.write("Bienvenue sur la page d'accueil COURTIER")
+        st.write("CETTE APPLICATION A ÉTÉ DÉVELOPPÉE PAR DJÉGUI WAGUÉ. EN CAS DE CONTRIBUTION, MERCI DE CONTACTER À L'ADRESSE SUIVANTE : dwague44@gmail.com")
 
     elif page == "Envoyer E-mail":
         with st.form("formulaire_email"):
@@ -162,15 +166,15 @@ def main():
             nom = st.text_input("Nom:")
             prenom = st.text_input("Prénom:")
             email = st.text_input("E-mail:")
-            fichier_pdf = st.file_uploader("Choisir un fichier PDF", type=["pdf"])
+            fichier_pdf = st.file_uploader("Choisir le devis pour l'envoi(PDF)", type=["pdf"])
 
-            submitted = st.form_submit_button("Envoyer l'e-mail de bienvenue")
+            submitted = st.form_submit_button("Envoyer le devis")
 
             if submitted:
                 if nom and prenom and email and fichier_pdf:
                     # Appel de la fonction envoyer_email avec les valeurs des champs du formulaire
                     details_envoi = envoyer_email(nom, prenom, email, piece_jointe=fichier_pdf)
-                    st.success(f"E-mail de bienvenue envoyé à {email}")
+                    st.success(f"Devis envoyé à {nom}")
 
                     # Ajouter les détails de l'envoi à l'historique
                     st.session_state.enregistrements.append(details_envoi)
