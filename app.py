@@ -29,11 +29,11 @@ st.markdown(
 
 def envoyer_email(nom, prenom, email, piece_jointe=None):
     smtp_server = os.environ.get("SMTP_SERVER")
-    port = int(os.environ.get("SMTP_PORT", 465))  # 465 est le port sécurisé SSL par défaut
+    port = int(os.environ.get("SMTP_PORT", 8501))  # 465 est le port sécurisé SSL par défaut
     adresse_expediteur = os.environ.get("ADRESSE_EXPEDITEUR")  # Remplacez par votre adresse e-mail Gmail
     mot_de_passe = os.environ.get("MOT_DE_PASSE")  # Remplacez par votre mot de passe Gmail
 
-    sujet = f"Votre demande de devis pour l'assurance auto ! {nom}"
+    sujet = f"Votre demandes de devis pour l'assurance auto ! {nom}"
     corps = f"""<span style="color: black;">
 Nous attirons votre attention sur la validité de ce devis.<br>
 <br>
