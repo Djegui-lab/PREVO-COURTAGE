@@ -34,7 +34,7 @@ st.markdown(
 # Fonction pour envoyer un e-mail avec la nouvelle signature HTML dans le corps
 def envoyer_email(nom, prenom, email, piece_jointe=None):
     smtp_server = os.environ.get("SMTP_SERVER")
-    port = os.environ.get(SMTP_PORT) # Port sécurisé SSL pour Gmail
+    port = 465 # Port sécurisé SSL pour Gmail
     adresse_expediteur = os.environ.get("ADRESSE_EXPEDITEUR")  # Remplacez par votre adresse e-mail Gmail
     mot_de_passe = os.environ.get("MOT_DE_PASSE")  # Remplacez par votre mot de passe Gmail
 
