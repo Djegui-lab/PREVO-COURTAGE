@@ -12,6 +12,16 @@ from email.mime.application import MIMEApplication
 from datetime import datetime
 
 
+# Image à afficher (le chemin est relatif au script)
+image_path = "djegui_wag.jpg"
+
+# Créer deux colonnes (colonne de gauche et colonne de droite)
+col1, col2 = st.columns([3, 1])
+
+# Éléments dans la colonne de droite (affiche l'image)
+with col2:
+    st.image(image_path, caption="AUTEUR / DJEGUI_WAGUE")
+
 # Ajouter du CSS personnalisé pour définir les couleurs de fond
 st.markdown(
     """
