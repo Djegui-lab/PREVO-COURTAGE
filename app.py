@@ -215,22 +215,12 @@ def main():
                         df_nouvelle_ligne = pd.DataFrame([details_envoi])
                         set_with_dataframe(worksheet, df_nouvelle_ligne, row=len(data) + 2, include_column_header=False)
                     else:
-                        st.warning("Erreur lors de l'envoi du devis. Aucune donnée n'a été enregistrée.")
+                        st.warning(f"Erreur lors de l'envoi du devis. {details_envoi['Statut']}")
                 else:
                         st.warning("Veuillez remplir tous les champs et choisir un fichier PDF.")
 
     elif page == "Historique":
         afficher_historique(st.session_state.enregistrements)
-
-
-
-
-
-
-
-
-
-
 
 
 
