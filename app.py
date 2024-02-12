@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
 import google 
-import google_auth
+
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
 import gspread
