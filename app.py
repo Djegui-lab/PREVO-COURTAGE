@@ -1,8 +1,6 @@
 
-
 import os 
 from dotenv import load_dotenv, dotenv_values
-load_dotenv() 
 import streamlit as st 
 import smtplib
 import ssl
@@ -10,7 +8,24 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from gspread_dataframe import set_with_dataframe
+import pandas as pd 
 
+load_dotenv() 
+
+
+worksheet = None
+# Chargement des données de l'historique depuis Google Sheets
+def load_data():
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("courtier-devis-automatique-e47e170f58f7.json", scopes=scope)
+    gc = gspread.authorize(credentials)
+    worksheet = gc.open("send-devis-courtier").sheet1
+    data = worksheet.get_all_values()
+    df = pd.DataFrame(data[1:], columns=data[0])
+    return df, worksheet  # Retourne également la feuille de calcul
 
 # Image à afficher (le chemin est relatif au script)
 image_path = "djegui_wag.jpg"
@@ -41,9 +56,10 @@ st.markdown(
 
 
 # Fonction pour envoyer un e-mail avec la nouvelle signature HTML dans le corps
-def envoyer_email(nom, prenom, email, piece_jointe=None):
+def envoyer_email(nom, prenom, email, piece_jointe=None, documents_recus=False):
+    global worksheet
     smtp_server = os.getenv("SMTP_SERVER")
-    port = int(os.getenv("PORT"))  # Port sécurisé SSL pour Gmail
+    port = os.getenv("SMTP_PORT") # Port sécurisé SSL pour Gmail
     adresse_expediteur = os.getenv("ADRESSE_EXPEDITEUR")  # Remplacez par votre adresse e-mail Gmail
     mot_de_passe = os.getenv("MOT_DE_PASSE")  # Remplacez par votre mot de passe Gmail
 
@@ -137,17 +153,16 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
         "E-mail": email,
         "Pièce jointe": nom_fichier if piece_jointe else None,
         "Statut": statut_envoi,
-        "Date d'envoi": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "Date d'envoi": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+        "Documents reçus": documents_recus,
+        
     }
+    
 
 
 
 
-
-
-
-
-# Fonction pour afficher l'historique
+    # Fonction pour afficher l'historique
 def afficher_historique(enregistrements):
     st.title("Historique des Enregistrements")
     if not enregistrements:
@@ -157,6 +172,7 @@ def afficher_historique(enregistrements):
 
 # Fonction principale
 def main():
+    global worksheet 
     st.title("Application web pour l'envoi automatique des Devis d'Assurance 🚗 ")
     st.subheader(
                 "NB: Après avoir saisi les informations du client, y compris le devis, ce client recevra directement le devis par e-mail.")
@@ -167,6 +183,9 @@ def main():
     # "state" pour stocker les enregistrements
     if "enregistrements" not in st.session_state:
         st.session_state.enregistrements = []
+    
+    # Chargement des données de l'historique depuis Google Sheets
+    data, worksheet = load_data()
 
     if page == "Accueil":
         st.write("Bienvenue sur la page d'accueil COURTIER")
@@ -179,23 +198,41 @@ def main():
             prenom = st.text_input("Prénom:")
             email = st.text_input("E-mail:")
             fichier_pdf = st.file_uploader("Choisir le devis pour l'envoi(PDF)", type=["pdf"])
+            documents_recus = st.multiselect("Sélectionnez les documents reçus", ["En attente de docs" ,"Carte grise", "Permis de conduire", "Relevé d'information", "Copie du jugement", "Ordonnance pénale"])
+
+
 
             submitted = st.form_submit_button("Envoyer le devis")
-
             if submitted:
-                if nom and prenom and email and fichier_pdf:
+                if nom and prenom and email and fichier_pdf :
                     # Appel de la fonction envoyer_email avec les valeurs des champs du formulaire
-                    details_envoi = envoyer_email(nom, prenom, email, piece_jointe=fichier_pdf)
-                    st.success(f"Devis envoyé à {nom}")
-
-                    # Ajouter les détails de l'envoi à l'historique
-                    st.session_state.enregistrements.append(details_envoi)
-
+                    details_envoi = envoyer_email(nom, prenom, email, piece_jointe=fichier_pdf, documents_recus=documents_recus)
+                    if details_envoi["Statut"] == "Envoyé avec succès":
+                        st.success(f"Devis envoyé à {nom} et enregistré dans Google Sheets")
+                        st.session_state.enregistrements.append(details_envoi)
+                        
+                        # Ajouter les détails de l'envoi dans Google Sheets
+                        df_nouvelle_ligne = pd.DataFrame([details_envoi])
+                        set_with_dataframe(worksheet, df_nouvelle_ligne, row=len(data) + 2, include_column_header=False)
+                    else:
+                        st.warning("Erreur lors de l'envoi du devis. Aucune donnée n'a été enregistrée.")
                 else:
-                    st.warning("Veuillez remplir tous les champs et choisir un fichier PDF.")
+                        st.warning("Veuillez remplir tous les champs et choisir un fichier PDF.")
 
     elif page == "Historique":
         afficher_historique(st.session_state.enregistrements)
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     main()
