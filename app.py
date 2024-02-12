@@ -22,7 +22,7 @@ credentials, project = google.auth.default()
 worksheet = None
 # Chargement des données de l'historique depuis Google Sheets
 def load_data():
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/cloud-platform"]
     credentials = service_account.Credentials.from_service_account_file("courtier-devis-automatique-e47e170f58f7.json", scopes=scope)
     gc = gspread.authorize(credentials)
     worksheet = gc.open("send-devis-courtier").sheet1
