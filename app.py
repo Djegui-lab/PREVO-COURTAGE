@@ -8,23 +8,19 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
-import google 
-import google.oauth
 from google.oauth2 import service_account
-
-#from google.oauth2.service_account import Credentials
+from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 from gspread_dataframe import set_with_dataframe
 import pandas as pd 
 
 load_dotenv() 
 
-credentials, project = google.auth.default()
 worksheet = None
 # Chargement des données de l'historique depuis Google Sheets
 def load_data():
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/cloud-platform"]
-    credentials = service_account.Credentials.from_service_account_file("courtier-devis-automatique-e47e170f58f7.json", scopes=scope)
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    credentials =  ServiceAccountCredentials.from_json_keyfile_name("courtier-devis-automatique-e47e170f58f7.json", scopes=scope)
     gc = gspread.authorize(credentials)
     worksheet = gc.open("send-devis-courtier").sheet1
     data = worksheet.get_all_values()
