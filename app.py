@@ -58,7 +58,7 @@ st.markdown(
 def envoyer_email(nom, prenom, email, piece_jointe=None, documents_recus=False):
     global worksheet
     smtp_server = os.getenv("SMTP_SERVER")
-    port = int(os.getenv("PORT"))  # Port sécurisé SSL pour Gmail
+    port = int(os.getenv("SMTP_PORT"))  # Port sécurisé SSL pour Gmail
     adresse_expediteur = os.getenv("ADRESSE_EXPEDITEUR")  # Remplacez par votre adresse e-mail Gmail
     mot_de_passe = os.getenv("MOT_DE_PASSE")  # Remplacez par votre mot de passe Gmail
 
