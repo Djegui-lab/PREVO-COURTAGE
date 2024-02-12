@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime
+import google 
 import google_auth
 from google.oauth2 import service_account
 from google.oauth2.service_account import Credentials
@@ -17,7 +18,7 @@ import pandas as pd
 
 load_dotenv() 
 
-
+credentials, project = google.auth.default()
 worksheet = None
 # Chargement des données de l'historique depuis Google Sheets
 def load_data():
