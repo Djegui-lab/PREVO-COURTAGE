@@ -4,3 +4,4 @@ pandas==1.5.3
 gspread==5.12.4
 gspread==5.12.4
 requests==2.31.0
+oauth2client==4.1.3
