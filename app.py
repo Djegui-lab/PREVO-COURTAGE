@@ -16,15 +16,7 @@ import pandas as pd
 load_dotenv() 
 
 worksheet = None
-# Chargement des données de l'historique depuis Google Sheets
-def load_data():
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials =  ServiceAccountCredentials.from_json_keyfile_name("courtier-devis-automatique-e47e170f58f7.json", scopes=scope)
-    gc = gspread.authorize(credentials)
-    worksheet = gc.open("send-devis-courtier").sheet1
-    data = worksheet.get_all_values()
-    df = pd.DataFrame(data[1:], columns=data[0])
-    return df, worksheet  # Retourne également la feuille de calcul
+
 
 # Image à afficher (le chemin est relatif au script)
 image_path = "djegui_wag.jpg"
@@ -159,7 +151,18 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
 
 
 
+# Chargement des données de l'historique depuis Google Sheets
+def load_data():
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    credentials =  ServiceAccountCredentials.from_json_keyfile_name("courtier-devis-automatique-e47e170f58f7.json", scopes=scope)
+    gc = gspread.authorize(credentials)
+    worksheet = gc.open("send-devis-courtier").sheet1
+    data = worksheet.get_all_values()
+    df = pd.DataFrame(data[1:], columns=data[0])
+    return df, worksheet  # Retourne également la feuille de calcul
 
+
+    
     # Fonction pour afficher l'historique
 def afficher_historique(enregistrements):
     st.title("Historique des Enregistrements")
