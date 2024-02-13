@@ -12,7 +12,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 from gspread_dataframe import set_with_dataframe
 import pandas as pd 
-
+from datetime import datetime
 load_dotenv() 
 
 worksheet = None
@@ -152,7 +152,7 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
         "Pièce jointe": nom_fichier if piece_jointe else None,
         "Statut": statut_envoi,
         "Date d'envoi": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
-        "Documents reçus": documents_recus,
+        "Documents reçus": documents_recus
         
     }
     
