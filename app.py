@@ -12,7 +12,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 from gspread_dataframe import set_with_dataframe
 import pandas as pd 
-from datetime import datetime
+from datetime import datetime, timedelta
 load_dotenv() 
 
 worksheet = None
@@ -151,7 +151,8 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
         "E-mail": email,
         "Pièce jointe": nom_fichier if piece_jointe else None,
         "Statut": statut_envoi,
-        "Date d'envoi": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+        "Date d'envoi": (datetime.now() + timedelta(hours=1)).strftime("%d-%m-%Y %H:%M:%S"),
+
 
 
         "Documents reçus": documents_recus
