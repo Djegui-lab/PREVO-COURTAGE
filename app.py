@@ -152,6 +152,8 @@ Nous espérons que notre proposition correspondra à vos attentes.<br>
         "Pièce jointe": nom_fichier if piece_jointe else None,
         "Statut": statut_envoi,
         "Date d'envoi": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+
+
         "Documents reçus": documents_recus
         
     }
