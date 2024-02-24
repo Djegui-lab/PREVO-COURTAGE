@@ -16,7 +16,7 @@ def image_to_byte_array(image: Image) -> bytes:
     imgByteArr = imgByteArr.getvalue()
     return imgByteArr
 
-API_KEY = os.environ.get("GOOGLE_API_KEY")
+API_KEY = "AIzaSyDIaz51uFeePxjLGD-Oz_-Aqw6_Zy83At4"
 genai.configure(api_key=API_KEY)
 
 st.image("./Google-Gemini-AI-Logo.png", width=200)
