@@ -28,7 +28,7 @@ gemini_vision.header("Interaction avec le Cabinet PREVO-COURTAGE")
 gemini_vision.write("")
 
 # Chemin de l'image unique
-image_path = "TOTOPREVO.png"
+image_path = "TOTOPREVO.PNG"
 
 # Saisie du prompt
 image_prompt = gemini_vision.text_input("Posez votre question concernant le cabinet :", placeholder="Prompt", label_visibility="visible")
